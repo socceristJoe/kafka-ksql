@@ -4,18 +4,24 @@
 - install Java (`sudo apt install openjdk-11-jre-headless`)
 - check version (`java -version`)
 - download Confluent platform from https://www.confluent.io/download/
-- unzip and untar (`tar xfz confluent-6*.tar.gz`)
-- delete the download (`rm confluent-6*.tar.gz`)
-- move to /opt (`sudo mv confluent-6* /opt`)
-- create symbolic link (`cd /opt; sudo ln -s confluent-6* confluent`)
+- unzip and untar (`tar xfz confluent-7*.tar.gz`)
+- delete the download (`rm confluent-7*.tar.gz`)
+- move to /opt (`sudo mv confluent-7* /opt`)
+- create symbolic link (`cd /opt; sudo ln -s confluent-7* confluent`)
 - set environment variable for the Confluent Platform directory (`export CONFLUENT_HOME=/opt/confluent`)
 - add to path (`export PATH=${PATH}:/opt/confluent/bin`)
+set fish_user_paths /opt/confluent/bin $fish_user_paths
 - add these same lines to your login profile (end of `~/.bashrc`)
 ```
 export PATH=${PATH}:/opt/confluent/bin
 export CONFLUENT_HOME=/opt/confluent
 ```
-
+vim  ~/.config/fish/config.fish
+```
+##Confluent
+export PATH="$PATH:/opt/confluent/bin"
+export CONFLUENT_HOME="/opt/confluent"
+```
 ## Confluent CLI changes from version 5.3 and 6.0
 The _Confluent CLI_ changed significantly in version 5.3 and 6.0.  The most important change is the inclusion of the `local` parameter when interacting with a local development environment. From version 6.0 you'll need to include the `services` parameter
 
