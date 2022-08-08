@@ -19,8 +19,9 @@ export CONFLUENT_HOME=/opt/confluent
 vim  ~/.config/fish/config.fish
 ```
 ##Confluent
-export PATH="$PATH:/opt/confluent/bin"
 export CONFLUENT_HOME="/opt/confluent"
+export PATH="$PATH:$CONFLUENT_HOME/bin"
+
 ```
 ## Confluent CLI changes from version 5.3 and 6.0
 The _Confluent CLI_ changed significantly in version 5.3 and 6.0.  The most important change is the inclusion of the `local` parameter when interacting with a local development environment. From version 6.0 you'll need to include the `services` parameter
@@ -52,6 +53,8 @@ EOF
 
 At KSQL prompt
 ```
+ksql
+
 show topics;
 
 -- this will show nothing
@@ -145,12 +148,14 @@ Alison | Smith | GB | 4.7
 
 At UNIX prompt
 ```
+cd /Users/joeqiao/Documents/LocalHub/kafka/kafka-ksql/
 ksql-datagen schema=./datagen/userprofile.avro format=json topic=USERPROFILE key=userid msgRate=1 iterations=1000
 ```
 
 At KSQL prompt
 ```
 -- Review a stream - every 5th row
+print 'USERPROFILE';
 print 'USERPROFILE' interval 5;
 ```
 

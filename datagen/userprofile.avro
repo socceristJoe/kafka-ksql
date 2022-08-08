@@ -29,7 +29,8 @@
             "Frank",
             "Grace",
             "Heidi",
-            "Ivan"
+            "Ivan",
+            "Joe"
           ]
         }
       }
@@ -46,7 +47,8 @@
             "Fawcett",
             "Edison",
             "Jones",
-            "Dotty"
+            "Dotty",
+            "Qiao"
           ]
         }
       }
@@ -58,7 +60,7 @@
         "arg.properties": {
           "options": [
             "AU",
-            "IN",
+            "CN",
             "GB",
             "US"
           ]
