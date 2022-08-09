@@ -32,6 +32,11 @@ For example, to start the ksql-server
 - From 5.3 : `confluent local start ksql-server` 
 - From 6.0 : `confluent local services ksql-server start` 
 
+### Switch Java Version in Fish Shell
+```
+set -x JAVA_HOME (/usr/libexec/java_home -v 11.0)
+```
+
 ## Lecture 7: KSQL Command Line
 
 ### Create a topic
@@ -214,14 +219,19 @@ At KSQL prompt
 
 Review the script `user_profile_pretty.ksql`
 
+
+
 ```
+cd /Users/joeqiao/Documents/LocalHub/kafka/kafka-ksql/
+ksql
+
 list streams;
 
 run script 'user_profile_pretty.ksql';
 
 list streams;
 
-describe extended user_profile_pretty;
+describe user_profile_pretty extended;
 
 select description from user_profile_pretty emit changes;
 
@@ -246,7 +256,7 @@ kafka-topics --bootstrap-server localhost:9092 --create --partitions 1 --replica
 -- version 5.5 and later
 kafka-console-producer --broker-list localhost:9092 --topic COUNTRY-CSV --property "parse.key=true"  --property "key.separator=:" << EOF
 AU:Australia
-IN:India
+CN:China
 GB:UK
 US:United States
 EOF
@@ -263,7 +273,7 @@ show tables;
 
 describe COUNTRYTABLE;
 
-describe extended COUNTRYTABLE;
+describe COUNTRYTABLE extended;
 
 SET 'auto.offset.reset'='earliest';
 
