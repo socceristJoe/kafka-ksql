@@ -319,17 +319,24 @@ At KSQL prompt
 select up.firstname, up.lastname, up.countrycode, ct.countryname 
 from USERPROFILE up 
 left join COUNTRYTABLE ct on ct.countrycode=up.countrycode emit changes;
+ 
+select countrycode, countryname from countrytable  emit changes;
+select * from countrytable emit changes;
 
 create stream up_joined as 
-select up.firstname 
+select (up.firstname 
 + ' ' + ucase(up.lastname) 
-+ ' from ' + ct.countryname
-+ ' has a rating of ' + cast(rating as varchar) + ' stars.' as description 
-, up.countrycode
++ ' from ' + ct.COUNTRYNAME
++ ' has a rating of ' + cast(rating as varchar) + ' stars.') as description, ct.countrycode
 from USERPROFILE up 
 left join COUNTRYTABLE ct on ct.countrycode=up.countrycode;
 
+describe up_joined extended;
+
 select description from up_joined emit changes;
+select * from up_joined ;
+
+drop stream up_joined;
 ```
 
 ## Lecture 15: Pull Queries
@@ -349,6 +356,8 @@ INSERT INTO driverLocations (driverId, countrycode, city, driverName) VALUES ('1
 INSERT INTO driverLocations (driverId, countrycode, city, driverName) VALUES ('2', 'AU', 'Melbourne', 'Bob');
 INSERT INTO driverLocations (driverId, countrycode, city, driverName) VALUES ('3', 'GB', 'London', 'Carole');
 INSERT INTO driverLocations (driverId, countrycode, city, driverName) VALUES ('4', 'US', 'New York', 'Derek');
+
+select * from driverLocations emit changes;
 ```
 
 ```
