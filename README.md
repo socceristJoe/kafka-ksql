@@ -389,9 +389,8 @@ docker-compose up -d
 
 Start ksqlDB KSQL CLI
 ```
-docker-compose exec  ksqldb-cli ksql http://ksqldb-server:8088
+docker exec -it ksqldb-cli ksql http://ksqldb-server:8088
 ```
-
 
 Kafka Connect
 
@@ -405,7 +404,6 @@ To look at the Postgres table
 ```
 docker-compose exec postgres psql -U postgres -c "select * from carusers;"
 ```
-
 
 ```
 CREATE SOURCE CONNECTOR postgres_jdbc_source WITH(
@@ -516,19 +514,22 @@ At UNIX prompt
 kafka-topics --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic COMPLAINTS_AVRO
 
 kafka-avro-console-producer  --broker-list localhost:9092 --topic COMPLAINTS_AVRO \
---property value.schema='
-{
+--property value.schema='{
   "type": "record",
   "name": "myrecord",
   "fields": [
-      {"name": "customer_name",  "type": "string" }
-    , {"name": "complaint_type", "type": "string" }
-    , {"name": "trip_cost", "type": "float" }
-    , {"name": "new_customer", "type": "boolean"}
+    { "name": "customer_name", "type": "string" },
+    { "name": "complaint_type", "type": "string" },
+    { "name": "trip_cost", "type": "float" },
+    { "name": "new_customer", "type": "boolean" }
   ]
-}' << EOF
+}
+'
+
 {"customer_name":"Carol", "complaint_type":"Late arrival", "trip_cost": 19.60, "new_customer": false}
-EOF
+{"customer_name":"Yan", "complaint_type":"Late arrival", "trip_cost": 29.60, "new_customer": yes}
+
+
 ```
 
 At KSQL prompt
@@ -537,6 +538,8 @@ At KSQL prompt
 create stream complaints_avro with (kafka_topic='COMPLAINTS_AVRO', value_format='AVRO');
 
 describe extended complaints_avro;
+
+select * from complaints_avro EMIT CHANGES;
  ```      
 
 
@@ -556,9 +559,11 @@ kafka-avro-console-producer  --broker-list localhost:9092 --topic COMPLAINTS_AVR
     , {"name": "trip_cost", "type": "float" }
     , {"name": "new_customer", "type": "boolean"}
   ]
-}' << EOF
+}'
+
 {"customer_name":"Bad Data", "complaint_type":"Bad driver", "trip_cost": 22.40, "new_customer": ShouldBeABoolean}
-EOF
+
+
 ```
 
 ## Lecture 21: Avro Schema Evolution
@@ -582,9 +587,10 @@ kafka-avro-console-producer  --broker-list localhost:9092 --topic COMPLAINTS_AVR
     , {"name": "new_customer", "type": "boolean"}
     , {"name": "number_of_rides", "type": "int", "default" : 1}
   ]
-}' << EOF
+}'
+
 {"customer_name":"Ed", "complaint_type":"Dirty car", "trip_cost": 29.10, "new_customer": false, "number_of_rides": 22}
-EOF
+
 
 curl -s -X GET http://localhost:8081/subjects/COMPLAINTS_AVRO-value/versions
 
@@ -610,7 +616,7 @@ Name                 : COMPLAINTS_AVRO
 
 ksql> create stream complaints_avro_v2 with (kafka_topic='COMPLAINTS_AVRO', value_format='AVRO');
 
-ksql> describe complaints_avro_v2;
+ksql> describe extended complaints_avro_v2;
 
 Name                 : COMPLAINTS_AVRO_V2
  Field           | Type
