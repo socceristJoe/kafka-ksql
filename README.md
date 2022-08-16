@@ -683,7 +683,7 @@ SELECT city->name AS city_name, city->country AS city_country, city->latitude as
 
 
 ```
-create stream weatherraw with (value_format='AVRO') as SELECT city->name AS city_name, city->country AS city_country, city->latitude as latitude, city->longitude as longitude, description, rain from weather ;  
+create stream weatherraw with (value_format='AVRO') as SELECT city->name AS city_name, city->country AS city_country, city->latitude as latitude, city->longitude as longitude, description, rain from weather;
 
 list streams;
 -- note AVRO
