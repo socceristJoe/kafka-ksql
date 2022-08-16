@@ -5,9 +5,9 @@ import io.confluent.ksql.function.udf.UdfDescription;
 import io.confluent.ksql.function.udf.UdfParameter;
 
 @UdfDescription(
-    name = "taxi_wait",
+    name = "taxi_wait_joe",
     description = "Return expected wait time in minutes",
-    version = "0.1.0",
+    version = "0.2.0",
     author = "Simon Aubury"
 )
 

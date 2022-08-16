@@ -831,7 +831,7 @@ select * from rr_europe_raw emit changes;
 
 create stream rr_world as select 'Europe' as data_source, * from rr_europe_raw;  
 
-insert into rr_world      select 'Americas' as data_source, * from rr_america_raw;  
+insert into rr_world select 'Americas' as data_source, * from rr_america_raw;  
 
 select * from rr_world emit changes; 
 
@@ -1011,6 +1011,7 @@ ksql> list functions;
 
 
 ksql> DESCRIBE FUNCTION TAXI_WAIT; 
+ksql> DESCRIBE FUNCTION TAXI_WAIT_JOE; 
 
 Name        : TAXI_WAIT
 Overview    : Return expected wait time in minutes
@@ -1030,16 +1031,17 @@ Use the UDF
 
 ```
 describe ridetodest;
+describe extended ridetodest;
 
 select user 
 , round(dist) as dist
 , weather_description
-, round(TAXI_WAIT(weather_description, dist)) as taxi_wait_min 
+, round(TAXI_WAIT_JOE(cast(weather_description as varchar), dist)) as taxi_wait_min 
 from ridetodest emit changes; 
 
 
 select user 
-+ ' will be waiting ' + cast(round(TAXI_WAIT(weather_description, dist)) as varchar)  
++ ' will be waiting ' + cast(round(TAXI_WAIT_JOE(weather_description, dist)) as varchar)  
 + ' minutes for their trip of ' 
 + cast(round(dist) as varchar) +' km to ' + city_name 
 + ' where it is ' + weather_description 
