@@ -4,8 +4,8 @@
 - install Java (`sudo apt install openjdk-11-jre-headless`)
 - check version (`java -version`)
 - download Confluent platform from https://www.confluent.io/download/
-- unzip and untar (`tar xfz confluent-7*.tar.gz`)
-- delete the download (`rm confluent-7*.tar.gz`)
+- unzip and untar (`tar xfz confluent-7*.tar`)
+- delete the download (`rm confluent-7*.tar`)
 - move to /opt (`sudo mv confluent-7* /opt`)
 - create symbolic link (`cd /opt; sudo ln -s confluent-7* confluent`)
 - set environment variable for the Confluent Platform directory (`export CONFLUENT_HOME=/opt/confluent`)
@@ -16,8 +16,15 @@ set fish_user_paths /opt/confluent/bin $fish_user_paths
 export PATH=${PATH}:/opt/confluent/bin
 export CONFLUENT_HOME=/opt/confluent
 ```
-vim  ~/.config/fish/config.fish
+#### zsh
 ```
+vim ~/.zshrc
+export PATH="$CONFLUENT_HOME/bin:$PATH"
+export CONFLUENT_HOME="/opt/confluent"
+```
+#### fish
+```
+vim  ~/.config/fish/config.fish
 ##Confluent
 export CONFLUENT_HOME="/opt/confluent"
 export PATH="$PATH:$CONFLUENT_HOME/bin"
@@ -37,6 +44,11 @@ For example, to start the ksql-server
 set -x JAVA_HOME (/usr/libexec/java_home -v 11.0)
 ```
 
+### ZSH
+```
+export JAVA_HOME=`/usr/libexec/java_home -v 1.8.0_271`
+```
+cd 
 ## Lecture 7: KSQL Command Line
 
 ### Create a topic
