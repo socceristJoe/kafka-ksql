@@ -1059,7 +1059,12 @@ _Headless_ KSQL server cluster is *not* aware of anys streams or tables you defi
 
 
 ```
+confluent local services ksql-server start
 confluent local services ksql-server stop
+OR
+confluent local services zookeeper start
+confluent local services kafka start
+confluent local services schema-registry start
 
 /opt/confluent/bin/ksql-server-start /opt/confluent/etc/ksqldb/ksql-server.properties  --queries-file ./where-is-bob.ksql  
 
@@ -1067,7 +1072,7 @@ confluent local services ksql-server stop
 ksql
 
 # check if BOB topic exists
-kafka-topics --zookeeper localhost:2181 --list --topic BOB
+kafka-topics --bootstrap-server localhost:9092 --list --topic BOB
 
 kafka-avro-console-consumer --bootstrap-server localhost:9092 --topic BOB 
 ```
