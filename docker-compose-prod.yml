@@ -3,7 +3,7 @@ version: '3'
 # Example based on https://github.com/saubury/stream-smarts
 
 services:
-  zookeeper:
+  zookeeper-2:
     image: "confluentinc/cp-zookeeper:${CONF_VER}"
     ports:
       - 2181:2181
@@ -15,10 +15,10 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
-  kafka:
+  kafka-2:
     image: "confluentinc/cp-enterprise-kafka:${CONF_VER}"
     depends_on:
-      - zookeeper
+      - zookeeper-2
     # volumes:
     #   - ./scripts:/scripts    
     #   - ./data/kafka/data:/var/lib/kafka/data
@@ -30,46 +30,44 @@ services:
     environment:
       TZ: ${TZ}
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-2:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
       CONFLUENT_METRICS_ENABLE: 'false'
 
-  schema-registry:
+  schema-registry-2:
     image: "confluentinc/cp-schema-registry:${CONF_VER}"
     ports:
       - 8081:8081  
     depends_on:
-      - zookeeper
-      - kafka
+      - zookeeper-2
+      - kafka-2
     volumes:
       - ./scripts:/scripts    
     environment:
       TZ: ${TZ}
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry-2
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper-2:2181
       SCHEMA_REGISTRY_AVRO_COMPATIBILITY_LEVEL: "none"
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: "WARN"
-
-  
 
   ksql-server-1:
     image: confluentinc/cp-ksqldb-server:${CONF_VER}
     ports:
       - '8088:8088'    
     depends_on:
-      - kafka
-      - schema-registry
+      - kafka-2
+      - schema-registry-2
     environment:
       TZ: ${TZ}
-      KSQL_BOOTSTRAP_SERVERS: kafka:29092
+      KSQL_BOOTSTRAP_SERVERS: kafka-2:29092
       KSQL_LISTENERS: http://0.0.0.0:8088
-      KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      KSQL_KSQL_SERVICE_ID: "my-ksql-server"
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry-2:8081
+      KSQL_KSQL_SERVICE_ID: "my-ksql-joe"
       KSQL_KSQL_EXTENSION_DIR: "/etc/ksql/ext"
     volumes:
       - ./scripts:/scripts
@@ -80,17 +78,15 @@ services:
     ports:
       - '28088:8088'    
     depends_on:
-      - kafka
-      - schema-registry
+      - kafka-2
+      - schema-registry-2
     environment:
       TZ: ${TZ}
-      KSQL_BOOTSTRAP_SERVERS: kafka:29092
+      KSQL_BOOTSTRAP_SERVERS: kafka-2:29092
       KSQL_LISTENERS: http://0.0.0.0:8088
-      KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      KSQL_KSQL_SERVICE_ID: "my-ksql-server"
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry-2:8081
+      KSQL_KSQL_SERVICE_ID: "my-ksql-joe"
       KSQL_KSQL_EXTENSION_DIR: "/etc/ksql/ext"
     volumes:
       - ./scripts:/scripts
       - ./ext:/etc/ksql/ext
-
- 

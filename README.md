@@ -1192,12 +1192,6 @@ LIST PROPERTIES;
 
 ## Lecture 34: State Stores
 
-
-
-
-
-## State Stores
-
 Start KSQL 
 ```
 LIST PROPERTIES;
