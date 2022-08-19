@@ -1110,6 +1110,7 @@ Multi Server with docker
 
 ```
 docker-compose  -f docker-compose-prod.yml up -d 
+ksql-datagen schema=./datagen/userprofile.avro format=json topic=USERPROFILE key=userid msgRate=1 iterations=1000
 ksql-datagen schema=./datagen/userprofile.avro format=json topic=USERPROFILE key=userid maxInterval=1000 iterations=100000
 ```
 
@@ -1142,7 +1143,7 @@ docker-compose -f docker-compose-prod.yml stop ksql-server-2
 docker-compose -f docker-compose-prod.yml stop ksql-server-1
 
 # start 2
-docker-compose -f docker-compose-prod.yml start ksql-server-1
+docker-compose -f docker-compose-prod.yml start ksql-server-2
 
 # start 1
 docker-compose -f docker-compose-prod.yml start ksql-server-1
@@ -1154,16 +1155,15 @@ docker-compose -f docker-compose-prod.yml start ksql-server-1
 Understanding settings
 
 ```
-confluent stop
-confluent destroy
+confluent local services stop
+confluent local destroy
 
-cd /opt/confluent/etc/ksql
-vi ksql-server.properties
+vim /opt/confluent/etc/ksqldb/ksql-server.properties
 
 # add this line anywhere in file
-ksql.service.id=myservicename
+ksql.service.id=joeservicename
 
-confluent start ksql-server
+confluent local services ksql-server start
 ```
 
 Start KSQL 
@@ -1205,6 +1205,8 @@ LIST PROPERTIES;
 
 At UNIX
 ```
+ksql-datagen schema=./datagen/userprofile.avro format=json topic=USERPROFILE key=userid msgRate=1 iterations=1000
+
 ksql-datagen schema=./datagen/userprofile.avro format=json topic=USERPROFILE key=userid maxInterval=5000 iterations=1000
 ```
 
@@ -1232,14 +1234,11 @@ At UNIX
 find /var/folders/1p/3whlrkzx4bs3fkd55_600x4c0000gp/T/confluent.V2kB1p2N/ksql-server/data/kafka-streams -type f 
 ```
 
-
-
-
-
-
 ### Complex  State Stores example
 
 ```
+vim /opt/confluent/etc/ksqldb/ksql-server.properties
+
 set 'ksql.sink.partitions' = '1';
 
 kafka-topics --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic userrequests
@@ -1263,10 +1262,6 @@ create stream user_browser_location as select ub.CAR_CODE, ub.silly, ub.browsern
 
 create stream user_browser_location_car as select ubl.silly, ubl.browsername, ubl.locationname, c.carname from user_browser_location ubl left join cartype c on ubl.CAR_CODE = c.car_code;
 ```
-
-
-
-
 
 ## Lecture 35: Testing ksqlDB applications
 Testing
